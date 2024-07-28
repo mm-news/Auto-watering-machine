@@ -1,0 +1,361 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <block type="board" id="MN*e]/_X)1k,6dWuQ`al" x="13" y="-112">
+    <field name="board_">3</field>
+    <field name="type_">1</field>
+    <field name="rate_">50</field>
+    <field name="check_">FALSE</field>
+    <field name="multi_">FALSE</field>
+    <value name="device_">
+      <block type="text" id="wJfurlv,AZLyU?FiVygT">
+        <field name="TEXT">yourID</field>
+      </block>
+    </value>
+    <statement name="callbacks_">
+      <block type="variables_set" id="-qo.c,vsoY5{p)/`8*y#">
+        <field name="VAR">servo</field>
+        <value name="VALUE">
+          <block type="servo_new" id="gU@xTeZi9^|^F2hcO~G_">
+            <field name="pin_">5</field>
+          </block>
+        </value>
+        <next>
+          <block type="variables_set" id="Ghpf9E#XOj0pL[[9B)!|">
+            <field name="VAR">photocell</field>
+            <value name="VALUE">
+              <block type="photocell_new" id="%vbNTW.tn2+#|H`R|~%Q">
+                <field name="pin_">0</field>
+              </block>
+            </value>
+            <next>
+              <block type="variables_set" id="Oq!s}Eot@47;VRdOX(eY">
+                <field name="VAR">mean</field>
+                <value name="VALUE">
+                  <block type="lists_create_empty" id="R/DRypsxPm|!)FDdss:_"></block>
+                </value>
+                <next>
+                  <block type="variables_set" id="Z}A1Z`:|hen{!F2!HNi^">
+                    <field name="VAR">window</field>
+                    <value name="VALUE">
+                      <block type="math_number" id="]`RW14O3`S6K8-sa6Em4">
+                        <field name="NUM">30</field>
+                      </block>
+                    </value>
+                    <next>
+                      <block type="procedures_callnoreturn" id="^.+vrlBKmFB.rb!o=ZQH">
+                        <mutation name="Remote Handler"></mutation>
+                        <next>
+                          <block type="procedures_callnoreturn" id="bq)C7S..lD7LEHbG)aFr">
+                            <mutation name="LDR Handler"></mutation>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+  <block type="procedures_defnoreturn" id="Dd~tE?j@EXGH#?%loZ]o" x="13" y="113">
+    <field name="NAME">LDR Handler</field>
+    <comment pinned="false" h="80" w="160">描述此函數...</comment>
+    <statement name="STACK">
+      <block type="photocell_detected" id="QL1RNTBZYCKdEjjcJ})P">
+        <field name="name_">photocell</field>
+        <statement name="detected_">
+          <block type="procedures_callnoreturn" id="n*EUur~v?7|M;)c_aVB#">
+            <mutation name="Update Moving Average">
+              <arg name="New Value"></arg>
+            </mutation>
+            <value name="ARG0">
+              <block type="photocell_val" id="n{HI[z~Wf2BjXDt-X5Ll">
+                <field name="name_">photocell</field>
+              </block>
+            </value>
+            <next>
+              <block type="demo_controller_show" id="zvLH%D+osHh_9qY`cV!/">
+                <value name="show_">
+                  <block type="math_round_digit" id="{Js[#Fb4C_ao#L[YL[;Z">
+                    <field name="type_">round</field>
+                    <field name="digit_">2</field>
+                    <value name="round_">
+                      <block type="procedures_callreturn" id="~`8SAS}R%|zT_/,w)5jf">
+                        <mutation name="Get Moving Average"></mutation>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </next>
+          </block>
+        </statement>
+      </block>
+    </statement>
+  </block>
+  <block type="procedures_defnoreturn" id="l!MKSrPN:ZfXTQY;d!Ly" x="13" y="363">
+    <mutation>
+      <arg name="New Value"></arg>
+    </mutation>
+    <field name="NAME">Update Moving Average</field>
+    <comment pinned="false" h="80" w="160">描述此函數...</comment>
+    <statement name="STACK">
+      <block type="controls_if" id="*p+G+4;OZTQ=#d6eP}`;">
+        <mutation else="1"></mutation>
+        <value name="IF0">
+          <block type="logic_compare" id="|2r^Fa9HvbkPhRHwbLzu">
+            <field name="OP">LT</field>
+            <value name="A">
+              <block type="lists_length_2" id="AK~BODgRpyt6ek/#*HO|">
+                <value name="name_">
+                  <block type="variables_get" id="QDvI~(Y5VW#NnGVkR0MT">
+                    <field name="VAR">mean</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="B">
+              <block type="variables_get" id="+t-5#;o;{XxZzve_7Z+D">
+                <field name="VAR">window</field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="lists_set_2" id="bja-l?r^%JjK4NoXD/EW">
+            <field name="type_">insert</field>
+            <field name="pos_">last</field>
+            <value name="name_">
+              <block type="variables_get" id="C}Dmgdg]*8;Zs12vNdMX">
+                <field name="VAR">mean</field>
+              </block>
+            </value>
+            <value name="val_">
+              <block type="variables_get" id="PQCXe?w:,rfa%E(.0=Rq">
+                <field name="VAR">New Value</field>
+              </block>
+            </value>
+          </block>
+        </statement>
+        <statement name="ELSE">
+          <block type="controls_for" id="d-RKmxxu@k4-9*9DNRxB">
+            <field name="VAR">i</field>
+            <value name="FROM">
+              <block type="math_number" id="AxwM,I589uH|DEJvd@.l">
+                <field name="NUM">1</field>
+              </block>
+            </value>
+            <value name="TO">
+              <block type="math_arithmetic" id="^p-P+uk`Vg-gVrqWqNu)">
+                <field name="OP">MINUS</field>
+                <value name="A">
+                  <block type="variables_get" id=":=L-e!cYH(tm@o194BUG">
+                    <field name="VAR">window</field>
+                  </block>
+                </value>
+                <value name="B">
+                  <block type="math_number" id="@qpp10[{|ofKKx;W[Pbi">
+                    <field name="NUM">1</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="BY">
+              <block type="math_number" id="Wii+FXHZ.45vZKimm_O@">
+                <field name="NUM">1</field>
+              </block>
+            </value>
+            <statement name="DO">
+              <block type="lists_set_2" id="Go?*b=+K!#zf?R-Bha5Q">
+                <field name="type_">set</field>
+                <field name="pos_">num</field>
+                <value name="name_">
+                  <block type="variables_get" id="A`5s29N_VeC1_dnH/U`g">
+                    <field name="VAR">mean</field>
+                  </block>
+                </value>
+                <value name="num_">
+                  <block type="variables_get" id="l,(/8d.AoLE8PX*sOw6m">
+                    <field name="VAR">i</field>
+                  </block>
+                </value>
+                <value name="val_">
+                  <block type="lists_get_2" id="@Ysc@+QgPoij?d0Imyzy">
+                    <field name="type_">get</field>
+                    <field name="pos_">num</field>
+                    <value name="val_">
+                      <block type="variables_get" id="a!^VrkTlb(@=G%%7fl1-">
+                        <field name="VAR">mean</field>
+                      </block>
+                    </value>
+                    <value name="num_">
+                      <block type="math_arithmetic" id="-0t,CdIg@y7PoUw|_nH8">
+                        <field name="OP">ADD</field>
+                        <value name="A">
+                          <block type="variables_get" id="qj+X1Rly,!NuM^7baAtj">
+                            <field name="VAR">i</field>
+                          </block>
+                        </value>
+                        <value name="B">
+                          <block type="math_number" id="!2#(i2(zZxGI*{t{rL-S">
+                            <field name="NUM">1</field>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </statement>
+            <next>
+              <block type="lists_set_2" id="UW0Ll[uqwf|^z|-mQdDE">
+                <field name="type_">set</field>
+                <field name="pos_">num</field>
+                <value name="name_">
+                  <block type="variables_get" id="d}Vy1rOKd)G0@F!m,gM@">
+                    <field name="VAR">mean</field>
+                  </block>
+                </value>
+                <value name="num_">
+                  <block type="variables_get" id="j(la6atwF#nEXeefLu[E">
+                    <field name="VAR">window</field>
+                  </block>
+                </value>
+                <value name="val_">
+                  <block type="variables_get" id="7W;w/PN~)is0U=3[a{=|">
+                    <field name="VAR">New Value</field>
+                  </block>
+                </value>
+              </block>
+            </next>
+          </block>
+        </statement>
+      </block>
+    </statement>
+  </block>
+  <block type="procedures_defnoreturn" id="XmBr.2oXfV^2t.0D({%Q" x="687" y="638">
+    <field name="NAME">Remote Handler</field>
+    <comment pinned="false" h="80" w="160">描述此函數...</comment>
+    <statement name="STACK">
+      <block type="demo_controller" id="#;+!a!{Gx;i,WUfs!vjD">
+        <field name="event_">1</field>
+        <field name="btn_">.btn-center</field>
+        <statement name="do_">
+          <block type="servo_angle" id="M?},Foj5JFBBeDMa}+|^">
+            <field name="var_">servo</field>
+            <field name="angle_">0</field>
+          </block>
+        </statement>
+        <next>
+          <block type="demo_controller" id="s8JQM%.rJL;AU}HSC*Fw">
+            <field name="event_">1</field>
+            <field name="btn_">.btn-up</field>
+            <statement name="do_">
+              <block type="servo_angle" id="+,u9yP/Z4^rACVG@fDYW">
+                <field name="var_">servo</field>
+                <field name="angle_">0</field>
+              </block>
+            </statement>
+            <next>
+              <block type="demo_controller" id="{-X.=p?NFMrQ](tjRrZA">
+                <field name="event_">1</field>
+                <field name="btn_">.btn-down</field>
+                <statement name="do_">
+                  <block type="servo_angle" id="J)U);%mjB:Scq1tsI_y3">
+                    <field name="var_">servo</field>
+                    <field name="angle_">180</field>
+                  </block>
+                </statement>
+                <next>
+                  <block type="demo_controller" id="^t:!H-Ga=*RA;0*._(l^">
+                    <field name="event_">1</field>
+                    <field name="btn_">.btn-left</field>
+                    <statement name="do_">
+                      <block type="servo_angle" id="IJ!n|hyQ;.BHLay(5^Zk">
+                        <field name="var_">servo</field>
+                        <field name="angle_">90</field>
+                      </block>
+                    </statement>
+                    <next>
+                      <block type="demo_controller" id=":8*uOCL#6(ufS_@n0,ln">
+                        <field name="event_">1</field>
+                        <field name="btn_">.btn-right</field>
+                        <statement name="do_">
+                          <block type="servo_angle" id="I?:6Y^i;3o7OcRt=`Q|+">
+                            <field name="var_">servo</field>
+                            <field name="angle_">270</field>
+                          </block>
+                        </statement>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+  <block type="procedures_defreturn" id="M*P%_.V|,l!jDN~{:#T^" x="-13" y="713">
+    <field name="NAME">Get Moving Average</field>
+    <comment pinned="false" h="80" w="160">描述此函數...</comment>
+    <statement name="STACK">
+      <block type="variables_set" id="I1.y{({m92rW`Kyg@-C@">
+        <field name="VAR">sum</field>
+        <value name="VALUE">
+          <block type="math_number" id="U)pU5K,Iz17n|AfHRt;b">
+            <field name="NUM">0</field>
+          </block>
+        </value>
+        <next>
+          <block type="controls_forEach" id="]Z}Ja0es=L6e80Oy|W2,">
+            <field name="VAR">j</field>
+            <value name="LIST">
+              <block type="variables_get" id="y.}S2FXW.O%)VNKLB;R`">
+                <field name="VAR">mean</field>
+              </block>
+            </value>
+            <statement name="DO">
+              <block type="variables_set" id="zcyzSanz3T#O;-@lH_6^">
+                <field name="VAR">sum</field>
+                <value name="VALUE">
+                  <block type="math_arithmetic" id="2#]Wu5t8a46zU,(e`cA*">
+                    <field name="OP">ADD</field>
+                    <value name="A">
+                      <block type="variables_get" id="or:?n69^n1A}g9T1*n(6">
+                        <field name="VAR">sum</field>
+                      </block>
+                    </value>
+                    <value name="B">
+                      <block type="variables_get" id="%JI]8~Q8F3P3GR:MSII-">
+                        <field name="VAR">j</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </statement>
+          </block>
+        </next>
+      </block>
+    </statement>
+    <value name="RETURN">
+      <block type="math_arithmetic" id="k]ZcmumO-9BGvhM3`Uyo">
+        <field name="OP">DIVIDE</field>
+        <value name="A">
+          <block type="variables_get" id="]ftE_6Ui?NrTp9Z)Zq@t">
+            <field name="VAR">sum</field>
+          </block>
+        </value>
+        <value name="B">
+          <block type="variables_get" id="3VdT8}khASjK_ftbVe/A">
+            <field name="VAR">window</field>
+          </block>
+        </value>
+      </block>
+    </value>
+  </block>
+</xml>
