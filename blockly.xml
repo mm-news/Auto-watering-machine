@@ -1,5 +1,5 @@
 <xml xmlns="http://www.w3.org/1999/xhtml">
-  <block type="board" id="MN*e]/_X)1k,6dWuQ`al" x="13" y="-112">
+  <block type="board" id="MN*e]/_X)1k,6dWuQ`al" x="13" y="13">
     <field name="board_">3</field>
     <field name="type_">1</field>
     <field name="rate_">50</field>
@@ -41,11 +41,37 @@
                       </block>
                     </value>
                     <next>
-                      <block type="procedures_callnoreturn" id="^.+vrlBKmFB.rb!o=ZQH">
-                        <mutation name="Remote Handler"></mutation>
+                      <block type="variables_set" id="Q7DW;Ro)jYMzHu!VMng;">
+                        <field name="VAR">is servo on</field>
+                        <value name="VALUE">
+                          <block type="logic_boolean" id="@f;*T+-s49T+#_84c=_g">
+                            <field name="BOOL">FALSE</field>
+                          </block>
+                        </value>
                         <next>
-                          <block type="procedures_callnoreturn" id="bq)C7S..lD7LEHbG)aFr">
-                            <mutation name="LDR Handler"></mutation>
+                          <block type="variables_set" id="1au7S4`_h4;ls?fw*2VB">
+                            <field name="VAR">brightness threshold</field>
+                            <value name="VALUE">
+                              <block type="math_number" id="%EP)B!#5,03wD}L9yw_V">
+                                <field name="NUM">0.45</field>
+                              </block>
+                            </value>
+                            <next>
+                              <block type="servo_angle" id="vQX}q!=?M458Txd|-0QN">
+                                <field name="var_">servo</field>
+                                <field name="angle_">0</field>
+                                <next>
+                                  <block type="procedures_callnoreturn" id="^.+vrlBKmFB.rb!o=ZQH">
+                                    <mutation name="Remote Handler"></mutation>
+                                    <next>
+                                      <block type="procedures_callnoreturn" id="bq)C7S..lD7LEHbG)aFr">
+                                        <mutation name="LDR Handler"></mutation>
+                                      </block>
+                                    </next>
+                                  </block>
+                                </next>
+                              </block>
+                            </next>
                           </block>
                         </next>
                       </block>
@@ -59,35 +85,89 @@
       </block>
     </statement>
   </block>
-  <block type="procedures_defnoreturn" id="Dd~tE?j@EXGH#?%loZ]o" x="13" y="113">
+  <block type="procedures_defnoreturn" id="Dd~tE?j@EXGH#?%loZ]o" x="13" y="313">
     <field name="NAME">LDR Handler</field>
     <comment pinned="false" h="80" w="160">描述此函數...</comment>
     <statement name="STACK">
-      <block type="photocell_detected" id="QL1RNTBZYCKdEjjcJ})P">
-        <field name="name_">photocell</field>
-        <statement name="detected_">
-          <block type="procedures_callnoreturn" id="n*EUur~v?7|M;)c_aVB#">
-            <mutation name="Update Moving Average">
-              <arg name="New Value"></arg>
-            </mutation>
-            <value name="ARG0">
-              <block type="photocell_val" id="n{HI[z~Wf2BjXDt-X5Ll">
-                <field name="name_">photocell</field>
-              </block>
-            </value>
-            <next>
-              <block type="demo_controller_show" id="zvLH%D+osHh_9qY`cV!/">
-                <value name="show_">
-                  <block type="math_round_digit" id="{Js[#Fb4C_ao#L[YL[;Z">
-                    <field name="type_">round</field>
-                    <field name="digit_">2</field>
-                    <value name="round_">
-                      <block type="procedures_callreturn" id="~`8SAS}R%|zT_/,w)5jf">
-                        <mutation name="Get Moving Average"></mutation>
-                      </block>
-                    </value>
+      <block type="controls_whileUntil" id="m/v1w=}WN.IO!!.q6;!+">
+        <field name="MODE">WHILE</field>
+        <value name="BOOL">
+          <block type="logic_boolean" id="h=[Xz}g;p^^C4tUyh%zx">
+            <field name="BOOL">TRUE</field>
+          </block>
+        </value>
+        <statement name="DO">
+          <block type="photocell_detected" id="QL1RNTBZYCKdEjjcJ})P">
+            <field name="name_">photocell</field>
+            <statement name="detected_">
+              <block type="procedures_callnoreturn" id="n*EUur~v?7|M;)c_aVB#">
+                <mutation name="Update Moving Average">
+                  <arg name="New Value"></arg>
+                </mutation>
+                <value name="ARG0">
+                  <block type="photocell_val" id="n{HI[z~Wf2BjXDt-X5Ll">
+                    <field name="name_">photocell</field>
                   </block>
                 </value>
+                <next>
+                  <block type="photocell_stop" id="-v|{QXe_NqIh5mR;x8]j">
+                    <field name="name_">photocell</field>
+                  </block>
+                </next>
+              </block>
+            </statement>
+            <next>
+              <block type="procedures_callnoreturn" id="LgDVG}A4yPofuOU({21P">
+                <mutation name="Automatic Servo"></mutation>
+                <next>
+                  <block type="demo_controller_show" id="zvLH%D+osHh_9qY`cV!/">
+                    <value name="show_">
+                      <block type="text_join" id="fx]q88mu3HPz%G-1olEL">
+                        <mutation items="5"></mutation>
+                        <value name="ADD0">
+                          <block type="variables_get" id="Y3|f0+rnw=1iZ%.wl5+3">
+                            <field name="VAR">is servo on</field>
+                          </block>
+                        </value>
+                        <value name="ADD1">
+                          <block type="text" id="[/p~dgCV0(qm60;1n-#}">
+                            <field name="TEXT">,</field>
+                          </block>
+                        </value>
+                        <value name="ADD2">
+                          <block type="math_round_digit" id="h(:+AU;m*%|[gbMRX^=L">
+                            <field name="type_">round</field>
+                            <field name="digit_">2</field>
+                            <value name="round_">
+                              <block type="procedures_callreturn" id="~`8SAS}R%|zT_/,w)5jf">
+                                <mutation name="Get Moving Average"></mutation>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                        <value name="ADD3">
+                          <block type="text" id="Vh[r,w:]Wb_u2hltidxJ">
+                            <field name="TEXT">,</field>
+                          </block>
+                        </value>
+                        <value name="ADD4">
+                          <block type="gettime" id="iFv3k*SSp+pOwiFB{(+*">
+                            <field name="time_">hms</field>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                    <next>
+                      <block type="delay" id="GnV}vuFiT1CAxT|YDe-^">
+                        <value name="secs_">
+                          <block type="math_number" id="`8Lqhw!O.6g!J[e~C@FY">
+                            <field name="NUM">1</field>
+                          </block>
+                        </value>
+                      </block>
+                    </next>
+                  </block>
+                </next>
               </block>
             </next>
           </block>
@@ -95,7 +175,7 @@
       </block>
     </statement>
   </block>
-  <block type="procedures_defnoreturn" id="l!MKSrPN:ZfXTQY;d!Ly" x="13" y="363">
+  <block type="procedures_defnoreturn" id="l!MKSrPN:ZfXTQY;d!Ly" x="13" y="713">
     <mutation>
       <arg name="New Value"></arg>
     </mutation>
@@ -235,59 +315,115 @@
       </block>
     </statement>
   </block>
-  <block type="procedures_defnoreturn" id="XmBr.2oXfV^2t.0D({%Q" x="687" y="638">
+  <block type="procedures_defnoreturn" id="XmBr.2oXfV^2t.0D({%Q" x="13" y="1038">
     <field name="NAME">Remote Handler</field>
     <comment pinned="false" h="80" w="160">描述此函數...</comment>
     <statement name="STACK">
-      <block type="demo_controller" id="#;+!a!{Gx;i,WUfs!vjD">
+      <block type="demo_controller" id="EfZ^4unKD`}nv}9:9v.R">
         <field name="event_">1</field>
-        <field name="btn_">.btn-center</field>
+        <field name="btn_">.btn-power</field>
         <statement name="do_">
-          <block type="servo_angle" id="M?},Foj5JFBBeDMa}+|^">
-            <field name="var_">servo</field>
-            <field name="angle_">0</field>
+          <block type="variables_set" id="_:+h3wY4(};l([qzMaro">
+            <field name="VAR">mean</field>
+            <value name="VALUE">
+              <block type="lists_create_empty" id="+JQRtdP5:3Jg,Zx!kyI?"></block>
+            </value>
           </block>
         </statement>
         <next>
-          <block type="demo_controller" id="s8JQM%.rJL;AU}HSC*Fw">
+          <block type="demo_controller" id="#;+!a!{Gx;i,WUfs!vjD">
             <field name="event_">1</field>
-            <field name="btn_">.btn-up</field>
+            <field name="btn_">.btn-center</field>
             <statement name="do_">
-              <block type="servo_angle" id="+,u9yP/Z4^rACVG@fDYW">
+              <block type="servo_angle" id="M?},Foj5JFBBeDMa}+|^">
                 <field name="var_">servo</field>
                 <field name="angle_">0</field>
               </block>
             </statement>
             <next>
-              <block type="demo_controller" id="{-X.=p?NFMrQ](tjRrZA">
+              <block type="demo_controller" id="s8JQM%.rJL;AU}HSC*Fw">
                 <field name="event_">1</field>
-                <field name="btn_">.btn-down</field>
+                <field name="btn_">.btn-up</field>
                 <statement name="do_">
-                  <block type="servo_angle" id="J)U);%mjB:Scq1tsI_y3">
+                  <block type="servo_angle" id="+,u9yP/Z4^rACVG@fDYW">
                     <field name="var_">servo</field>
-                    <field name="angle_">180</field>
+                    <field name="angle_">0</field>
                   </block>
                 </statement>
                 <next>
-                  <block type="demo_controller" id="^t:!H-Ga=*RA;0*._(l^">
+                  <block type="demo_controller" id="{-X.=p?NFMrQ](tjRrZA">
                     <field name="event_">1</field>
-                    <field name="btn_">.btn-left</field>
+                    <field name="btn_">.btn-down</field>
                     <statement name="do_">
-                      <block type="servo_angle" id="IJ!n|hyQ;.BHLay(5^Zk">
+                      <block type="servo_angle" id="J)U);%mjB:Scq1tsI_y3">
                         <field name="var_">servo</field>
-                        <field name="angle_">90</field>
+                        <field name="angle_">180</field>
                       </block>
                     </statement>
                     <next>
-                      <block type="demo_controller" id=":8*uOCL#6(ufS_@n0,ln">
+                      <block type="demo_controller" id="^t:!H-Ga=*RA;0*._(l^">
                         <field name="event_">1</field>
-                        <field name="btn_">.btn-right</field>
+                        <field name="btn_">.btn-left</field>
                         <statement name="do_">
-                          <block type="servo_angle" id="I?:6Y^i;3o7OcRt=`Q|+">
+                          <block type="servo_angle" id="IJ!n|hyQ;.BHLay(5^Zk">
                             <field name="var_">servo</field>
-                            <field name="angle_">270</field>
+                            <field name="angle_">90</field>
                           </block>
                         </statement>
+                        <next>
+                          <block type="demo_controller" id=":8*uOCL#6(ufS_@n0,ln">
+                            <field name="event_">1</field>
+                            <field name="btn_">.btn-right</field>
+                            <statement name="do_">
+                              <block type="servo_angle" id="I?:6Y^i;3o7OcRt=`Q|+">
+                                <field name="var_">servo</field>
+                                <field name="angle_">90</field>
+                              </block>
+                            </statement>
+                            <next>
+                              <block type="demo_controller_range" id="e?3[?ta=1]UOG!4L6^~B">
+                                <value name="min_">
+                                  <block type="math_number" id="7.}!g9W7}d{cPj[H!??f">
+                                    <field name="NUM">0</field>
+                                  </block>
+                                </value>
+                                <value name="max_">
+                                  <block type="math_number" id="sW*(bdr)JBw?]Jh4rb-(">
+                                    <field name="NUM">180</field>
+                                  </block>
+                                </value>
+                                <value name="step_">
+                                  <block type="math_number" id="7]T}OddKr-Jnc:JsKE8v">
+                                    <field name="NUM">5</field>
+                                  </block>
+                                </value>
+                                <value name="default_">
+                                  <block type="math_number" id="F`u:9{G#4l5/yNmiJ%?s">
+                                    <field name="NUM">0</field>
+                                  </block>
+                                </value>
+                                <statement name="range_">
+                                  <block type="servo_angle_set" id="P67]QtS{C@5.Ly~1@t03">
+                                    <field name="var_">servo</field>
+                                    <value name="angle_">
+                                      <block type="math_arithmetic" id="eSE8RYtjpL^FNQ/5d74,">
+                                        <field name="OP">MINUS</field>
+                                        <value name="A">
+                                          <block type="math_number" id="]@C}G@2P;vtsaCQ1@B4@">
+                                            <field name="NUM">180</field>
+                                          </block>
+                                        </value>
+                                        <value name="B">
+                                          <block type="demo_controller_range_value" id="IEMmBc,0sT{-(LOA=PlP"></block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                  </block>
+                                </statement>
+                              </block>
+                            </next>
+                          </block>
+                        </next>
                       </block>
                     </next>
                   </block>
@@ -299,7 +435,7 @@
       </block>
     </statement>
   </block>
-  <block type="procedures_defreturn" id="M*P%_.V|,l!jDN~{:#T^" x="-13" y="713">
+  <block type="procedures_defreturn" id="M*P%_.V|,l!jDN~{:#T^" x="13" y="1488">
     <field name="NAME">Get Moving Average</field>
     <comment pinned="false" h="80" w="160">描述此函數...</comment>
     <statement name="STACK">
@@ -351,11 +487,122 @@
           </block>
         </value>
         <value name="B">
-          <block type="variables_get" id="3VdT8}khASjK_ftbVe/A">
-            <field name="VAR">window</field>
+          <block type="lists_length_2" id="aDP=%OEqR)p,gp.Fly-.">
+            <value name="name_">
+              <block type="variables_get" id="^]ULC8gtd;^8rTa!CHaO">
+                <field name="VAR">mean</field>
+              </block>
+            </value>
           </block>
         </value>
       </block>
     </value>
+  </block>
+  <block type="procedures_defnoreturn" id="6|(gO/[}3.(3sv8zZC]1" x="13" y="1688">
+    <field name="NAME">Automatic Servo</field>
+    <comment pinned="false" h="80" w="160">描述此函數...</comment>
+    <statement name="STACK">
+      <block type="controls_if" id="0OE3wHkiq98u)RuM6`7U">
+        <mutation elseif="1"></mutation>
+        <value name="IF0">
+          <block type="logic_operation" id="|f-^#eHN}2?J;@Fgyh!;">
+            <field name="OP">AND</field>
+            <value name="A">
+              <block type="logic_negate" id="fFb1Nlce/z8Bkpph2HIq">
+                <value name="BOOL">
+                  <block type="variables_get" id="|G*uu?+^P_G+i|y5lt2h">
+                    <field name="VAR">is servo on</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="B">
+              <block type="logic_compare" id="(vd76c)UqZnLYmXNxN=k">
+                <field name="OP">GT</field>
+                <value name="A">
+                  <block type="math_round_digit" id="goaY]^YV6bF7kjTnM+0q">
+                    <field name="type_">round</field>
+                    <field name="digit_">3</field>
+                    <value name="round_">
+                      <block type="procedures_callreturn" id="oD}/}f`;|AW/vIi~,U2k">
+                        <mutation name="Get Moving Average"></mutation>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+                <value name="B">
+                  <block type="variables_get" id="0pnvJj!wsjJ5[4Du))sr">
+                    <field name="VAR">brightness threshold</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO0">
+          <block type="variables_set" id="Sb+=8k2r2Mq=O!we?qmt">
+            <field name="VAR">is servo on</field>
+            <value name="VALUE">
+              <block type="logic_boolean" id=";8DnGDYDN~Ama5O7]9FI">
+                <field name="BOOL">TRUE</field>
+              </block>
+            </value>
+            <next>
+              <block type="servo_angle" id="p:D@eXjRI-7v;C;cl2xz">
+                <field name="var_">servo</field>
+                <field name="angle_">90</field>
+              </block>
+            </next>
+          </block>
+        </statement>
+        <value name="IF1">
+          <block type="logic_compare" id="C};0H9}N5rz`{PZBaHHu">
+            <field name="OP">LT</field>
+            <value name="A">
+              <block type="math_round_digit" id="L5!MW-~lN7Av?v+4)luH">
+                <field name="type_">round</field>
+                <field name="digit_">3</field>
+                <value name="round_">
+                  <block type="procedures_callreturn" id="X:FH)S,y}:sxpo{[56@!">
+                    <mutation name="Get Moving Average"></mutation>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <value name="B">
+              <block type="math_arithmetic" id="W~4w)#OB|,dA4:6F7=m|">
+                <field name="OP">MINUS</field>
+                <value name="A">
+                  <block type="variables_get" id="t,c:Oq~]+(#mI++vzmL~">
+                    <field name="VAR">brightness threshold</field>
+                  </block>
+                </value>
+                <value name="B">
+                  <block type="math_number" id=";zj)_h%;p^A_0:k=_EL=">
+                    <field name="NUM">0.1</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </value>
+        <statement name="DO1">
+          <block type="variables_set" id="iknmS7tH9b^ZWEu@K42M">
+            <field name="VAR">is servo on</field>
+            <value name="VALUE">
+              <block type="logic_boolean" id="tWuY]l`,M6[Wy?7N9yNH">
+                <field name="BOOL">FALSE</field>
+              </block>
+            </value>
+            <next>
+              <block type="servo_angle" id="-v*0KFAu6jUmK9LU#P|9">
+                <field name="var_">servo</field>
+                <field name="angle_">0</field>
+              </block>
+            </next>
+          </block>
+        </statement>
+      </block>
+    </statement>
   </block>
 </xml>
